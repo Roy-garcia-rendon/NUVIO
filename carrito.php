@@ -51,7 +51,7 @@
     }
 
     // Redirigir de vuelta al inicio
-    header("Location: home.php");
+    header("Location: index.php");
     exit;
     ?>
 
