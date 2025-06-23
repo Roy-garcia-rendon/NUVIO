@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
     <title>NUVIO/home</title>
 
     <!-- Bootstrap CSS -->
@@ -15,6 +16,17 @@
 <body>
     <div class="container mt-4">
         <h1 class="mb-4 text-center">Lista de productos</h1>
+
+        <nav class="navbar">
+            <ul>
+                <li><a href="ver_carrito.php" style="padding: 10px; background-color: green; color: white; text-decoration: none; border-radius: 5px;">
+                        🛒 Ver carrito
+                    </a>
+                </li>
+                <li><a href="login.php">Inicia sesión</a></li>
+            </ul>
+
+        </nav>
 
         <?php
         // Conexión a la base de datos
@@ -35,7 +47,7 @@
                 <div class="col">
                     <div class="card h-100 shadow-sm">
                         <!-- Imagen de producto (opcional) -->
-                        <img src="ruta/a/una/imagen.jpg" class="card-img-top" alt="Imagen del producto">
+                        <img src="media/camisablanca.jpg" class="card-img-top" alt="Imagen del producto">
 
                         <div class="card-body">
                             <h5 class="card-title"><?php echo $row["nombre"]; ?></h5>

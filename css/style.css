@@ -1,0 +1,19 @@
+.navbar ul li {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    list-style: none;
+    position: relative;
+}
+
+.navbar ul li a {
+    font-size: 18px;
+    padding: 0.5rem 1rem;
+    color: #000000;
+    display: block;
+    transition: all 0.4s linear;
+}
+
+.navbar ul li a:hover {
+    color: #969696;
+}
