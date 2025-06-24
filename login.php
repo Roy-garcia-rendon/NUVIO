@@ -1,3 +1,59 @@
+<?php
+session_start();
+include 'include/conexion.php';
+$db = new conexion();
+$conexion = $db->conex();
+$error = '';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST["email"];
+    $contrasena = $_POST["contrasena"];
+
+    $stmt = $conexion->prepare("SELECT id, nombre, email, contrasena FROM usuarios WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+
+    if ($usuario = $resultado->fetch_assoc()) {
+        if (password_verify($contrasena, $usuario["contrasena"])) {
+            // Guardar datos importantes en la sesión
+            $_SESSION["usuario_id"] = $usuario["id"];
+            $_SESSION["usuario_nombre"] = $usuario["nombre"];
+            $_SESSION["usuario_email"] = $usuario["email"];
+
+            // Asociar o crear carrito
+            $usuario_id = $usuario['id'];
+            $stmt_cart = $conexion->prepare("SELECT id FROM carritos WHERE usuario_id = ?");
+            $stmt_cart->bind_param("i", $usuario_id);
+            $stmt_cart->execute();
+            $resultado_cart = $stmt_cart->get_result();
+
+            if ($fila_cart = $resultado_cart->fetch_assoc()) {
+                $_SESSION['carrito_id'] = $fila_cart['id'];
+            } else {
+                $stmt_insert = $conexion->prepare("INSERT INTO carritos (usuario_id) VALUES (?)");
+                $stmt_insert->bind_param("i", $usuario_id);
+                $stmt_insert->execute();
+                $_SESSION['carrito_id'] = $stmt_insert->insert_id;
+                $stmt_insert->close();
+            }
+
+            $stmt_cart->close();
+            $stmt->close();
+
+            // Redirigir al inicio
+            header("Location: index.php");
+            exit();
+        } else {
+            $error = "Correo o contraseña incorrectos.";
+        }
+    } else {
+        $error = "Correo o contraseña incorrectos.";
+    }
+
+    $stmt->close();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -250,63 +306,6 @@
         }
     </style>
 </head>
-
-<?php
-session_start();
-include 'include/conexion.php';
-$db = new conexion();
-$conexion = $db->conex();
-$error = '';
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST["email"];
-    $contrasena = $_POST["contrasena"];
-
-    $stmt = $conexion->prepare("SELECT id, nombre, email, contrasena FROM usuarios WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
-
-    if ($usuario = $resultado->fetch_assoc()) {
-        if (password_verify($contrasena, $usuario["contrasena"])) {
-            // Guardar datos importantes en la sesión
-            $_SESSION["usuario_id"] = $usuario["id"];
-            $_SESSION["usuario_nombre"] = $usuario["nombre"];
-            $_SESSION["usuario_email"] = $usuario["email"];
-
-            // Asociar o crear carrito
-            $usuario_id = $usuario['id'];
-            $stmt_cart = $conexion->prepare("SELECT id FROM carritos WHERE usuario_id = ?");
-            $stmt_cart->bind_param("i", $usuario_id);
-            $stmt_cart->execute();
-            $resultado_cart = $stmt_cart->get_result();
-
-            if ($fila_cart = $resultado_cart->fetch_assoc()) {
-                $_SESSION['carrito_id'] = $fila_cart['id'];
-            } else {
-                $stmt_insert = $conexion->prepare("INSERT INTO carritos (usuario_id) VALUES (?)");
-                $stmt_insert->bind_param("i", $usuario_id);
-                $stmt_insert->execute();
-                $_SESSION['carrito_id'] = $stmt_insert->insert_id;
-                $stmt_insert->close();
-            }
-
-            $stmt_cart->close();
-            $stmt->close();
-
-            // Redirigir al inicio
-            header("Location: index.php");
-            exit();
-        } else {
-            $error = "Correo o contraseña incorrectos.";
-        }
-    } else {
-        $error = "Correo o contraseña incorrectos.";
-    }
-
-    $stmt->close();
-}
-?>
 
 <body>
     <!-- Floating background shapes -->
