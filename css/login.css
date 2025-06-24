@@ -1,0 +1,79 @@
+   * {
+       margin: 0;
+       padding: 0;
+       box-sizing: border-box;
+   }
+
+   body {
+       font-family: 'Segoe UI', sans-serif;
+       background: linear-gradient(135deg, #43cea2, #185a9d);
+       height: 100vh;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+   }
+
+   .login-container {
+       background: white;
+       padding: 40px 30px;
+       border-radius: 12px;
+       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+       width: 100%;
+       max-width: 380px;
+       animation: slideIn 1s ease;
+   }
+
+   h1 {
+       text-align: center;
+       margin-bottom: 24px;
+       color: #222;
+   }
+
+   input[type="email"],
+   input[type="password"] {
+       width: 100%;
+       padding: 12px;
+       margin-bottom: 16px;
+       border: 1px solid #ccc;
+       border-radius: 8px;
+       transition: border-color 0.3s;
+   }
+
+   input:focus {
+       border-color: #43cea2;
+       outline: none;
+   }
+
+   button {
+       width: 100%;
+       padding: 12px;
+       background-color: #43cea2;
+       color: white;
+       font-weight: bold;
+       border: none;
+       border-radius: 8px;
+       cursor: pointer;
+       transition: background-color 0.3s;
+   }
+
+   button:hover {
+       background-color: #38b2ac;
+   }
+
+   .error-message {
+       text-align: center;
+       color: red;
+       margin-bottom: 15px;
+   }
+
+   @keyframes slideIn {
+       from {
+           transform: translateY(-40px);
+           opacity: 0;
+       }
+
+       to {
+           transform: translateY(0);
+           opacity: 1;
+       }
+   }

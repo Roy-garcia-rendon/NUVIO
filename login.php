@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="css/login.css">
+    <title>Login - NUVIO</title>
 </head>
+
 <?php
 session_start();
 include 'include/conexion.php';
@@ -22,13 +24,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $resultado = $stmt->get_result();
 
-
     if ($usuario = $resultado->fetch_assoc()) {
         if (password_verify($contrasena, $usuario["contrasena"])) {
             $_SESSION["usuario_id"] = $usuario["id"];
             $_SESSION["usuario_nombre"] = $usuario["nombre"];
 
-            // Verificar o crear carrito para el usuario
             $usuario_id = $usuario['id'];
             $stmt_cart = $conexion->prepare("SELECT id FROM carritos WHERE usuario_id = ?");
             $stmt_cart->bind_param("i", $usuario_id);
@@ -59,18 +59,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <body>
-    <h1>LOGIN DE NUVIO</h1>
+    <div class="login-container">
+        <h1>Iniciar Sesión</h1>
 
-    <?php if (!empty($error)) : ?>
-        <p style="color:red;"><?php echo $error; ?></p>
-    <?php endif; ?>
+        <?php if (!empty($error)) : ?>
+            <div class="error-message"><?php echo $error; ?></div>
+        <?php endif; ?>
 
-    <form action="login.php" method="post">
-        <input type="email" name="email" placeholder="Correo" required>
-        <input type="password" name="contrasena" placeholder="Contraseña" required>
-        <button type="submit">Iniciar Sesión</button>
-    </form>
-
+        <form action="login.php" method="post">
+            <input type="email" name="email" placeholder="Correo electrónico" required>
+            <input type="password" name="contrasena" placeholder="Contraseña" required>
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
 </body>
 
 </html>

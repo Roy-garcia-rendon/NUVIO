@@ -24,6 +24,7 @@
                     </a>
                 </li>
                 <li><a href="login.php">Inicia sesión</a></li>
+                <li><a href="registro.php">Registrate</a></li>
             </ul>
 
         </nav>
