@@ -110,7 +110,7 @@ Nuvio/
 
 1. **Clonar o descargar el proyecto**
    ```bash
-   git clone [URL_DEL_REPOSITORIO]
+   git clone [https://github.com/Roy-garcia-rendon/NUVIO.git]
    cd Nuvio
    ```
 
