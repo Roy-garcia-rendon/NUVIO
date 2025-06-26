@@ -27,6 +27,29 @@ if (isset($_SESSION['usuario_id'])) {
 
     $stmt->close();
 }
+
+// DEBUG: Verificar productos antes de mostrar
+$debug = isset($_GET['debug']) && $_GET['debug'] == '1';
+if ($debug) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    echo "<h2>🔍 Debug: index.php</h2>";
+
+    // Contar productos
+    $count_sql = "SELECT COUNT(*) as total FROM productos";
+    $count_result = mysqli_query($conexion, $count_sql);
+    $count_row = mysqli_fetch_assoc($count_result);
+    echo "📊 Total de productos en BD: " . $count_row['total'] . "<br>";
+
+    // Mostrar primeros 5 productos
+    $test_sql = "SELECT id, nombre, LENGTH(imagen) as tamano FROM productos LIMIT 5";
+    $test_result = mysqli_query($conexion, $test_sql);
+    echo "<h3>Primeros 5 productos:</h3>";
+    while ($test_row = mysqli_fetch_assoc($test_result)) {
+        echo "ID: " . $test_row['id'] . " - " . $test_row['nombre'] . " - Imagen: " . ($test_row['tamano'] ? $test_row['tamano'] . " bytes" : "NULL") . "<br>";
+    }
+    echo "<hr>";
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -34,7 +57,7 @@ if (isset($_SESSION['usuario_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NUVIO - Tienda Online</title>
+    <title>NUVIO - Tienda Online <?php echo $debug ? '(DEBUG)' : ''; ?></title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -309,6 +332,16 @@ if (isset($_SESSION['usuario_id'])) {
                 margin-bottom: 1rem;
             }
         }
+
+        .debug-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 
@@ -373,21 +406,47 @@ if (isset($_SESSION['usuario_id'])) {
             // Consulta de productos (reutilizamos la conexión ya establecida)
             $sql = "SELECT id, nombre, descripcion, precio, stock, imagen, tipo_imagen FROM productos";
             $resultado = mysqli_query($conexion, $sql);
+
+            if (!$resultado) {
+                echo "<div class='alert alert-danger'>Error en la consulta: " . mysqli_error($conexion) . "</div>";
+                exit();
+            }
+
+            $num_productos = mysqli_num_rows($resultado);
+
+            if ($debug) {
+                echo "<div class='debug-info'>";
+                echo "<strong>DEBUG INFO:</strong><br>";
+                echo "Productos encontrados: $num_productos<br>";
+                echo "SQL ejecutada: $sql<br>";
+                echo "</div>";
+            }
             ?>
 
             <!-- Product Grid -->
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                 <?php
                 $delay = 0;
+                $contador_productos = 0;
+
                 while ($row = mysqli_fetch_assoc($resultado)) :
                     $delay += 0.1;
+                    $contador_productos++;
+
+                    if ($debug) {
+                        echo "<!-- DEBUG: Procesando producto #$contador_productos - ID: " . $row['id'] . " -->";
+                    }
                 ?>
                     <div class="col" style="animation-delay: <?php echo $delay; ?>s;">
                         <div class="card h-100">
                             <img src="mostrar_imagen.php?id=<?php echo $row['id']; ?>"
                                 class="card-img-top"
                                 alt="<?php echo htmlspecialchars($row["nombre"]); ?>"
-                                onerror="this.src='C:/ProgramData/MySQL/MySQL Server 9.0/Uploads/default.jpg'">
+                                onerror="this.src='C:/ProgramData/MySQL/MySQL Server 9.0/Uploads/default.jpg'"
+                                <?php if ($debug): ?>
+                                onload="console.log('Imagen cargada: <?php echo $row['id']; ?>')"
+                                onerror="console.log('Error cargando imagen: <?php echo $row['id']; ?>')"
+                                <?php endif; ?>>
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo htmlspecialchars($row["nombre"]); ?></h5>
                                 <p class="card-text"><?php echo htmlspecialchars($row["descripcion"]); ?></p>
@@ -400,6 +459,17 @@ if (isset($_SESSION['usuario_id'])) {
                                         Stock: <?php echo $row["stock"]; ?>
                                     </span>
                                 </p>
+                                <?php if ($debug): ?>
+                                    <div class="debug-info">
+                                        <small>
+                                            <strong>Debug:</strong><br>
+                                            ID: <?php echo $row['id']; ?><br>
+                                            Tiene imagen: <?php echo !empty($row['imagen']) ? 'SÍ' : 'NO'; ?><br>
+                                            Tipo: <?php echo $row['tipo_imagen'] ?: 'NULL'; ?><br>
+                                            URL: mostrar_imagen.php?id=<?php echo $row['id']; ?>
+                                        </small>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                             <div class="card-footer text-center">
                                 <a href="carrito.php?agregar=<?php echo $row['id']; ?>" class="btn btn-primary w-100">
@@ -412,7 +482,17 @@ if (isset($_SESSION['usuario_id'])) {
                 <?php endwhile; ?>
             </div>
 
-            <?php mysqli_close($conexion); ?>
+            <?php
+            if ($debug) {
+                echo "<div class='debug-info'>";
+                echo "<strong>RESUMEN DEBUG:</strong><br>";
+                echo "Productos procesados en el bucle: $contador_productos<br>";
+                echo "Productos encontrados en BD: $num_productos<br>";
+                echo "</div>";
+            }
+
+            mysqli_close($conexion);
+            ?>
         </div>
     </div>
 
@@ -423,6 +503,7 @@ if (isset($_SESSION['usuario_id'])) {
         // Animación de entrada para las tarjetas
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.card');
+            console.log('Tarjetas encontradas:', cards.length);
 
             // Intersection Observer para animaciones al hacer scroll
             const observer = new IntersectionObserver((entries) => {
@@ -436,11 +517,12 @@ if (isset($_SESSION['usuario_id'])) {
                 threshold: 0.1
             });
 
-            cards.forEach(card => {
+            cards.forEach((card, index) => {
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(30px)';
                 card.style.transition = 'all 0.6s ease';
                 observer.observe(card);
+                console.log(`Tarjeta ${index + 1} observada`);
             });
 
             // Efecto hover mejorado para las tarjetas

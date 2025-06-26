@@ -291,6 +291,33 @@ $stmt->close();
             opacity: 0.9;
         }
 
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            border-radius: 15px 15px 0 0 !important;
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-outline-secondary:hover,
+        .btn-outline-success:hover,
+        .btn-outline-warning:hover,
+        .btn-outline-info:hover,
+        .btn-outline-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
         @media (max-width: 768px) {
             .admin-container {
                 margin: 1rem;
@@ -351,6 +378,101 @@ $stmt->close();
                 <div class="stat-card">
                     <div class="stat-number"><?php echo $productos_stock_bajo; ?></div>
                     <div class="stat-label">Stock Bajo</div>
+                </div>
+            </div>
+
+            <!-- Herramientas de Administración -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-tools me-2"></i>
+                                Herramientas de Administración
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <h6 class="text-primary mb-2">
+                                        <i class="fas fa-bug me-1"></i>Debug y Testing
+                                    </h6>
+                                    <div class="d-grid gap-2">
+                                        <a href="admin_tools/debug_simple.php" class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-search me-1"></i>Debug Simple
+                                        </a>
+                                        <a href="admin_tools/debug_index.php" class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-list me-1"></i>Debug Index
+                                        </a>
+                                        <a href="admin_tools/index_debug.php" class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-home me-1"></i>Index Debug
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <h6 class="text-success mb-2">
+                                        <i class="fas fa-images me-1"></i>Gestión de Imágenes
+                                    </h6>
+                                    <div class="d-grid gap-2">
+                                        <a href="admin_tools/test_imagen.php" class="btn btn-outline-success btn-sm">
+                                            <i class="fas fa-eye me-1"></i>Test Imagen
+                                        </a>
+                                        <a href="admin_tools/test_mostrar_imagen.php" class="btn btn-outline-success btn-sm">
+                                            <i class="fas fa-image me-1"></i>Test Mostrar Imagen
+                                        </a>
+                                        <a href="admin_tools/mostrar_imagen.php" class="btn btn-outline-success btn-sm">
+                                            <i class="fas fa-photo-video me-1"></i>Mostrar Imagen
+                                        </a>
+                                        <a href="admin_tools/mover_imagen_defecto.php" class="btn btn-outline-success btn-sm">
+                                            <i class="fas fa-exchange-alt me-1"></i>Mover Imagen Defecto
+                                        </a>
+                                        <a href="admin_tools/setup_imagenes.php" class="btn btn-outline-success btn-sm">
+                                            <i class="fas fa-cog me-1"></i>Setup Imágenes
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <h6 class="text-warning mb-2">
+                                        <i class="fas fa-check-circle me-1"></i>Verificación
+                                    </h6>
+                                    <div class="d-grid gap-2">
+                                        <a href="admin_tools/verificar_productos.php" class="btn btn-outline-warning btn-sm">
+                                            <i class="fas fa-box me-1"></i>Verificar Productos
+                                        </a>
+                                        <a href="admin_tools/verificar_tipo_imagen.php" class="btn btn-outline-warning btn-sm">
+                                            <i class="fas fa-file-image me-1"></i>Verificar Tipo Imagen
+                                        </a>
+                                        <a href="admin_tools/verificar_y_agregar_imagenes.php" class="btn btn-outline-warning btn-sm">
+                                            <i class="fas fa-plus-circle me-1"></i>Verificar y Agregar Imágenes
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <h6 class="text-info mb-2">
+                                        <i class="fas fa-stethoscope me-1"></i>Diagnóstico
+                                    </h6>
+                                    <div class="d-grid gap-2">
+                                        <a href="admin_tools/diagnostico_imagenes_detallado.php" class="btn btn-outline-info btn-sm">
+                                            <i class="fas fa-clipboard-list me-1"></i>Diagnóstico Imágenes
+                                        </a>
+                                        <a href="admin_tools/DIAGNOSTICO_IMAGENES.md" class="btn btn-outline-info btn-sm">
+                                            <i class="fas fa-file-alt me-1"></i>Documentación Diagnóstico
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <h6 class="text-danger mb-2">
+                                        <i class="fas fa-flask me-1"></i>Pruebas
+                                    </h6>
+                                    <div class="d-grid gap-2">
+                                        <a href="admin_tools/agregar_productos_prueba.php" class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-plus me-1"></i>Agregar Productos Prueba
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
